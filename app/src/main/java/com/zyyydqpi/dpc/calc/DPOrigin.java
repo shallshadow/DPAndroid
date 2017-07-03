@@ -1,14 +1,10 @@
 package com.zyyydqpi.dpc.calc;
 
 /**
- * Created by strom on 2017/6/29.
- */
-
-/**
  * Created by shall on 17-6-25.
  */
 public class DPOrigin implements IDynamicPasswd {
-    public String getPasswd(String[] keys, long time, long interval) {
+    public String getPasswd(String[] keys, long time) {
         int max = 0;
         for(String key : keys){
             max = max < key.length() ? key.length() : max;
@@ -23,7 +19,7 @@ public class DPOrigin implements IDynamicPasswd {
         }
 
         long second = time / 1000L;
-        long count = second / interval;
+        long count = second / 30L;
 
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < result.length; i++){

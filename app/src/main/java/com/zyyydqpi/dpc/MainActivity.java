@@ -10,9 +10,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.zyyydqpi.dpc.calc.DPDecorater;
-import com.zyyydqpi.dpc.calc.DPOrigin;
+import com.zyyydqpi.dpc.calc.DPMD5;
+import com.zyyydqpi.dpc.calc.IDynamicPasswd;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,9 +22,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnSetKeys;
     private TextView keyText;
+    private TextView timeText;
     private String[] keys;
     private DPDecorater decorater;
-    private DPOrigin origin;
+    private IDynamicPasswd origin;
     private Timer timer = new Timer();
     private TimerTask task = new TimerTask() {
         @Override
@@ -30,16 +33,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(keys == null){
                 return;
             }
-            String key = decorater.getPasswd(keys);
             Message message = new Message();
-            message.obj = key;
-            handler.sendMessage(message);
+            long date = new Date().getTime();
+            date = date / 1000L;
+            String key = decorater.getPasswd(keys, date / 30L);
+            Bundle bundle = new Bundle();
+            bundle.putLong("time", date);
+            bundle.putString("key", key);
+            message.setData(bundle);
+            updateTimeHandler.sendMessage(message);
+
         }
     };
-    Handler handler = new Handler(){
+
+    Handler updateTimeHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-           keyText.setText(msg.obj.toString());
+            Bundle bundle = msg.getData();
+
+            long ti = bundle.getLong("time");
+            String key = bundle.getString("key");
+            ti = 30L - ti % 30L;
+            String showTime = "Update the key in " + ti + " second";
+            timeText.setText(showTime);
+            String showKey = "Key : " + key;
+            keyText.setText(showKey);
         }
     };
     @Override
@@ -52,9 +70,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSetKeys.setOnClickListener(this);
 
         keyText = (TextView) findViewById(R.id.key_txt_view);
-        origin = new DPOrigin();
+        timeText = (TextView) findViewById(R.id.time_txt_view);
+        origin = new DPMD5();
         decorater = new DPDecorater(origin);
-        timer.schedule(task, 1000, 1000 * 15);
+        timer.schedule(task, 0, 1000);
     }
 
     private void getkeys(){

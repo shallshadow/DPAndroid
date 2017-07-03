@@ -17,10 +17,14 @@ public class DPDecorater {
     }
 
     public String getPasswd(String[] keys){
-        return this.dynamicPasswd.getPasswd(keys, new Date().getTime(), 30L);
+        return this.dynamicPasswd.getPasswd(keys, new Date().getTime());
     }
 
     public String getPasswd(){
-        return this.dynamicPasswd.getPasswd(keys, new Date().getTime(), 30L);
+        return this.dynamicPasswd.getPasswd(keys, new Date().getTime());
+    }
+
+    public String getPasswd(String[] keys, Long time){
+        return this.dynamicPasswd.getPasswd(keys, time);
     }
 }
