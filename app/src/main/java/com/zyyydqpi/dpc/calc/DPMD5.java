@@ -30,11 +30,11 @@ public class DPMD5 implements IDynamicPasswd {
         }
         md.update(key.getBytes());
         key = new BigInteger(1, md.digest()).toString(16);
-        key = key.substring(2, 24);
+        key = key.substring(1, 24);
         key = key + time;
 
         md.update(key.getBytes());
         key = new BigInteger(1, md.digest()).toString(16);
-        return key.substring(7,12);
+        return key.substring(6,12);
     }
 }

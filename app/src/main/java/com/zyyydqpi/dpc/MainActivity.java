@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             Message message = new Message();
             long date = new Date().getTime();
-            date = date / 1000L;
-            String key = decorater.getPasswd(keys, date / 30L);
+            date = date / 1000L / 30L * 30L;
+            String key = decorater.getPasswd(keys, date);
             Bundle bundle = new Bundle();
             bundle.putLong("time", date);
             bundle.putString("key", key);
